@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const moment = require("moment");
+
 const persons = [
   {
     id: 1,
@@ -29,6 +31,15 @@ app.get("/", (req, res) => {
 app.get("/api/persons", (req, res) => {
   res.send(persons);
 });
+
+let requestCount = 0;
+app.get("/info", (req, res) => {
+  requestCount++;
+  const date = moment().format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")+" (Eastern European Standard Time)";
+  const message = "<p> Phonebook has info for " + requestCount + " people</p> " + date;
+  res.send(message);
+});
+
 
 
 const PORT = 3001;
