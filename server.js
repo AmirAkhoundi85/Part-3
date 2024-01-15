@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const moment = require("moment");
 
+app.use(express.json())
+
 let persons = [
   {
     id: 1,
@@ -35,11 +37,13 @@ app.get("/api/persons", (req, res) => {
 let requestCount = 0;
 app.get("/info", (req, res) => {
   requestCount++;
-  const date = moment().format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")+" (Eastern European Standard Time)";
-  const message = "<p> Phonebook has info for " + requestCount + " people</p> " + date;
+  const date =
+    moment().format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ") +
+    " (Eastern European Standard Time)";
+  const message =
+    "<p> Phonebook has info for " + requestCount + " people</p> " + date;
   res.send(message);
 });
-
 
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
@@ -52,8 +56,8 @@ app.get("/api/persons/:id", (req, res) => {
   }
   return res.status(404).send({ messeage: "Not Found!" });
 });
-app.delete("/api/persons/:id", (req, res)=>{
-    const id = req.params.id;
+app.delete("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
 
   const p = persons.find((item) => item.id == id);
   if (!p) {
@@ -64,10 +68,31 @@ app.delete("/api/persons/:id", (req, res)=>{
   return res
     .status(204)
     .send({ message: "id " + id + " Deleted successfuly." });
-}
+});
 
-);
+app.post("/api/persons", (req, res) => {
 
+  const { name, number } = req.body;
+
+  if (!name) {
+    return res.status(400).send({ error: "The name is required" });
+  }
+  if (!number) {
+    return res.status(400).send({ error: "The number is required" });
+  }
+
+const id = Math.floor(Math.random() * 1000) + 1;
+  const newItem = {
+    id,
+    name,
+    number,
+  }
+
+  persons.push(newItem);
+  return res
+    .status(201)
+    .send({ message: "id " + id + " created successfuly.", persons });
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
