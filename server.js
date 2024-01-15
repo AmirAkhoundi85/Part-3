@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const moment = require("moment");
 
-const persons = [
+let persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -41,7 +41,7 @@ app.get("/info", (req, res) => {
 });
 
 
-app.get("/api/person/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
 
   console.log(id);
@@ -52,6 +52,21 @@ app.get("/api/person/:id", (req, res) => {
   }
   return res.status(404).send({ messeage: "Not Found!" });
 });
+app.delete("/api/persons/:id", (req, res)=>{
+    const id = req.params.id;
+
+  const p = persons.find((item) => item.id == id);
+  if (!p) {
+    return res.status(404).send({ messeage: "id " + id + " Not Found!" });
+  }
+
+  persons = persons.filter((item) => item.id != id);
+  return res
+    .status(204)
+    .send({ message: "id " + id + " Deleted successfuly." });
+}
+
+);
 
 
 const PORT = 3001;
