@@ -71,8 +71,11 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
+  const id = Math.floor(Math.random() * 1000) + 1;
 
   const { name, number } = req.body;
+
+ 
 
   if (!name) {
     return res.status(400).send({ error: "The name is required" });
@@ -81,12 +84,18 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).send({ error: "The number is required" });
   }
 
-const id = Math.floor(Math.random() * 1000) + 1;
+  const x = persons.find((item) => item.name == name);
+
+  if (x) {
+    return res.status(400).send({ error: "name must be unique" });
+  }
+
   const newItem = {
     id,
     name,
     number,
   }
+
 
   persons.push(newItem);
   return res
