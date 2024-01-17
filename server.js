@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
 const moment = require("moment");
+const morgan = require("morgan");
 
-app.use(express.json())
+app.use(express.json());
+app.use(morgan("tiny"));
+
 
 let persons = [
   {
@@ -75,8 +78,6 @@ app.post("/api/persons", (req, res) => {
 
   const { name, number } = req.body;
 
- 
-
   if (!name) {
     return res.status(400).send({ error: "The name is required" });
   }
@@ -94,8 +95,7 @@ app.post("/api/persons", (req, res) => {
     id,
     name,
     number,
-  }
-
+  };
 
   persons.push(newItem);
   return res
