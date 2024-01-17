@@ -117,8 +117,8 @@ app.post("/api/persons", (req, res) => {
     .send({ message: "id " + id + " created successfuly.", persons });
 });
 
-
-const PORT = 3001;
+//deploy url:   https://render-first-cql4.onrender.com/api/persons
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
