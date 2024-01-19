@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 const Country = ({ countryInfo }) => {
   const languages = Object.values(countryInfo.languages);
-  const api_key= process.env.REACT_APP_API_KEY_2;
+  const api_key= process.env.REACT_APP_API_KEY;
   const[weather, setWeather]= useState(null)
 
   useEffect(() => {
