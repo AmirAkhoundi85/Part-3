@@ -4,6 +4,7 @@ const moment = require("moment");
 const morgan = require("morgan");
 const cors = require("cors")
 
+app.use(express.static("dist"));
 app.use(cors())
 app.use(express.json());
 app.use(morgan(function (tokens, req, res) {
@@ -117,7 +118,10 @@ app.post("/api/persons", (req, res) => {
     .send({ message: "id " + id + " created successfuly.", persons });
 });
 
-//deploy url:   https://render-first-cql4.onrender.com/api/persons
+//deploy url:   https://render-first-cql4.onrender.com
+// https://render-first-cql4.onrender.com/persons
+
+// https://render-first-cql4.onrender.com/api/persons
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
