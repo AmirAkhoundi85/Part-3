@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node server.js jsdfsff  dfgdfgdfg dgfdgg",
     "dev": "nodemon server.js"
   },
   "keywords": [],
@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "moment": "^2.30.1",
+    "mongoose": "^8.1.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
