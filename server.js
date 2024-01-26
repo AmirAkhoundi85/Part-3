@@ -58,15 +58,13 @@ app.get("/api/persons/:id", (req, res) => {
 app.delete("/api/persons/:id", (req, res) => {
   const id = req.params.id;
 
-  const p = persons.find((item) => item.id == id);
-  if (!p) {
-    return res.status(404).send({ messeage: "id " + id + " Not Found!" });
-  }
-
-  persons = persons.filter((item) => item.id != id);
-  return res
-    .status(204)
-    .send({ message: "id " + id + " Deleted successfuly." });
+  Person.findByIdAndDelete(id)
+  .then(()=>{
+    res.status(204).send()
+  }).catch((error)=>{
+    res.status(400).send({ error: "malformatted id" });
+  })
+  
 });
 
 app.post("/api/persons", (req, res) => {
@@ -89,6 +87,8 @@ app.post("/api/persons", (req, res) => {
       .send(newPerson);
   });
 });
+ 
+
 
 //deploy url:   https://render-first-cql4.onrender.com
 // https://render-first-cql4.onrender.com/persons
