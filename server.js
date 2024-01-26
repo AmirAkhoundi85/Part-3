@@ -55,16 +55,16 @@ app.get("/api/persons/:id", (req, res) => {
   }
   return res.status(404).send({ messeage: "Not Found!" });
 });
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res,next) => {
   const id = req.params.id;
 
   Person.findByIdAndDelete(id)
-  .then(()=>{
-    res.status(204).send()
-  }).catch((error)=>{
-    res.status(400).send({ error: "malformatted id" });
-  })
-  
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((error) => {
+      next(error)
+    });
 });
 
 app.post("/api/persons", (req, res) => {
@@ -82,13 +82,17 @@ app.post("/api/persons", (req, res) => {
     number,
   });
   newPerson.save().then((data) => {
-    return res
-      .status(201)
-      .send(newPerson);
+    return res.status(201).send(newPerson);
   });
 });
- 
 
+const errorHandller = (error, req, res, next) => {
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+  next(error)
+};
+app.use(errorHandller);
 
 //deploy url:   https://render-first-cql4.onrender.com
 // https://render-first-cql4.onrender.com/persons
