@@ -28,8 +28,7 @@ app.get("/", (req, res) => {
   res.send("root route");
 });
 app.get("/api/persons", (req, res) => {
-  Person.find({})
-  .then((persons) => {
+  Person.find({}).then((persons) => {
     res.json(persons);
   });
 });
@@ -71,8 +70,6 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const id = Math.floor(Math.random() * 1000) + 1;
-
   const { name, number } = req.body;
 
   if (!name) {
@@ -82,22 +79,15 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).send({ error: "The number is required" });
   }
 
-  const x = persons.find((item) => item.name == name);
-
-  if (x) {
-    return res.status(400).send({ error: "name must be unique" });
-  }
-
-  const newItem = {
-    id,
+  const newPerson = Person({
     name,
     number,
-  };
-
-  persons.push(newItem);
-  return res
-    .status(201)
-    .send({ message: "id " + id + " created successfuly.", persons });
+  });
+  newPerson.save().then((data) => {
+    return res
+      .status(201)
+      .send(newPerson);
+  });
 });
 
 //deploy url:   https://render-first-cql4.onrender.com
