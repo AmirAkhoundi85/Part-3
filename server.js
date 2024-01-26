@@ -66,6 +66,18 @@ app.delete("/api/persons/:id", (req, res,next) => {
       next(error)
     });
 });
+app.put("/api/persons/:id", (req,res,next)=>{
+  const id=req.params.id;
+  const {name, number} = req.body
+  Person.findByIdAndUpdate(id, { name, number }, {new:true})
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
+  
+})
 
 app.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
