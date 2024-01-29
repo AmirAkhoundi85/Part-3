@@ -44,16 +44,22 @@ app.get("/info", (req, res) => {
   res.send(message);
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res,next) => {
   const id = req.params.id;
 
-  console.log(id);
-  const person = persons.find((item) => item.id == id);
 
-  if (person) {
-    return res.status(200).send(person);
-  }
-  return res.status(404).send({ messeage: "Not Found!" });
+  Person.findById(id)
+    .then((data) => {
+      if (data) {
+        return res.status(200).send(data);
+      }
+      return res.status(404).end();
+    })
+    .catch((error) => {
+      next(error);
+    });
+
+  
 });
 app.delete("/api/persons/:id", (req, res,next) => {
   const id = req.params.id;
