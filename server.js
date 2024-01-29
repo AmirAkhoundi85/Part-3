@@ -75,7 +75,11 @@ app.delete("/api/persons/:id", (req, res,next) => {
 app.put("/api/persons/:id", (req,res,next)=>{
   const id=req.params.id;
   const {name, number} = req.body
-  Person.findByIdAndUpdate(id, { name, number }, {new:true})
+  Person.findByIdAndUpdate(
+    id,
+    { name, number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((data) => {
       res.status(200).send(data);
     })
@@ -85,28 +89,29 @@ app.put("/api/persons/:id", (req,res,next)=>{
   
 })
 
-app.post("/api/persons", (req, res) => {
-  const { name, number } = req.body;
-
-  if (!name) {
-    return res.status(400).send({ error: "The name is required" });
-  }
-  if (!number) {
-    return res.status(400).send({ error: "The number is required" });
-  }
+app.post("/api/persons", (req, res, next) => {
+  const { name, number } = req.body; 
 
   const newPerson = Person({
     name,
     number,
   });
-  newPerson.save().then((data) => {
-    return res.status(201).send(newPerson);
-  });
+  newPerson
+    .save()
+    .then((data) => {
+      return res.status(201).send(data);
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 const errorHandller = (error, req, res, next) => {
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
+  }
+  if(error.name === "ValidationError"){
+    return res.status(400).send({ error: error.message });
   }
   next(error)
 };

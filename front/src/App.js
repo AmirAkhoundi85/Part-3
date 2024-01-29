@@ -39,14 +39,20 @@ function App() {
     const newPerson = { name: newName, number: number };
 
     if (!person) {
-      personService.create(newPerson).then((data) => {
-        setPersons([...persons, data]);
-        setError("");
-        setMessage(`Added ${newName}`);
-        setTimeout(() => {
-          setMessage("");
-        }, 5000);
-      });
+      personService
+        .create(newPerson)
+        .then((data) => {
+          setPersons([...persons, data]);
+          setError("");
+          setMessage(`Added ${newName}`);
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
+        })
+        .catch((error) => {
+          setError(error.response.data.error);
+          console.log(error.response.data.error);
+        });
     } else {
       const result = window.confirm(
         `${newName} is already added to the phonebook, replace the old number with a new one?`
